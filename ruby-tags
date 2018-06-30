@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+# universal-ctags wrapper for ruby
+
+require 'optparse'
+
+@bundler = false
+@gems = false
+@src = false
+@stdlib = false
+
+@debug = false
+
+bundle_show_paths = 'bundle show --paths'
+
+src_glob = File.expand_path("~/src/ruby/ruby-#{RUBY_VERSION}/**/*.[ch]")
+
+parser = OptionParser.new
+
+parser.banner = "Usage: #{File.basename($0)} [options] FILES..."
+
+parser.on('-b', '--bundler', "Include bundled gems from output of `#{bundle_show_paths}`") { @bundler = true }
+parser.on('-g', '--gems', 'Include all installed gems from Gem.path') { @gems = true }
+parser.on('-s', '--src', "Include ruby C source files from #{src_glob}") { @src = true }
+parser.on('-l', '--stdlib', 'Include standard libraries from $LOAD_PATH') { @stdlib = true }
+
+parser.on('-d', '--debug') { @debug = true }
+
+parser.parse!
+
+if [@bundler, @gems, @stdlib, @src].none?
+  @stdlib = true
+end
+
+dirs = []
+
+if @bundler
+  output = `#{bundle_show_paths}`
+
+  if $?.success?
+    dirs += output.split(/\n/)
+  end
+end
+
+if @gems
+  dirs += Gem.path.map {|path| Dir[path + '/gems/*/{ext,lib}'] }.flatten
+end
+
+if @src
+  dirs += Dir[src_glob]
+end
+
+if @stdlib
+  dirs += $LOAD_PATH
+end
+
+dirs << '/dev/null'
+
+if @debug
+  require 'pp'
+  pp ARGV
+  pp dirs
+end
+
+system('ctags', '-R', '--languages=ruby,c,c++', *ARGV, *dirs)

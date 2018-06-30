@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+# display notifications when a command finished
+
+# Usage:
+#
+# 1. Install terminal-notifier with Homebrew
+#
+# 2. Add the following code into your ~/.bashrc
+#
+#    if which terminal-notifier-alert > /dev/null 2>&1; then
+#      alias alert='terminal-notifier-alert $? "$(history | tail -1)"'
+#    fi
+#
+# 3. Run a time-consuming command followed by alert
+#
+#    $ make; alert
+
+if ARGV.size < 2
+  puts %(Usage: #{File.basename($0)} $? "$(history | tail -1)")
+  exit
+end
+
+exit_status = ARGV[0].to_i
+command = ARGV[1].gsub(/^\s*\d+\s*|;[^;]+$/, '')
+
+if exit_status.zero?
+  title = "\u{2714} OK"
+else
+  title = "\u{274C} Error: #{exit_status}"
+end
+
+IO.popen(['terminal-notifier', '-title', title], 'w') do |io|
+  io << command
+end

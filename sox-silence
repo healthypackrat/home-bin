@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+# add pre/post silence to wav files using sox command
+
+require 'optparse'
+require 'pathname'
+require 'tempfile'
+
+@output_dir = 'output'
+@rate = '44100'
+@bits = '16'
+@pre = '0.2'
+@post = '2.0'
+
+parser = OptionParser.new
+
+parser.banner = "Usage: #{File.basename($0)} [options] FILES..."
+
+parser.on('-d', '--output-dir=DIR', "Output directory (default: #{@output_dir})") {|value| @output_dir = value }
+parser.on('-r', '--rate=RATE', "Sample rate (default: #{@rate})") {|value| @rate = value }
+parser.on('-b', '--bits=BITS', "Bit depth (default: #{@bits})") {|value| @bits = value }
+parser.on('--pre=DURATION', "Pre silence duration (default: #{@pre})") {|value| @pre = value }
+parser.on('--post=DURATION', "Post silence duration (default: #{@post})") {|value| @post = value }
+
+parser.parse!
+
+if ARGV.empty?
+  puts parser
+  exit
+end
+
+@output_dir = Pathname.new(@output_dir)
+
+@output_dir.mkpath
+
+Tempfile.open(%w[pre .wav]) do |pre_silence_io|
+  Tempfile.open(%w[post .wav]) do |post_silence_io|
+    pre_silence_path = pre_silence_io.path
+    post_silence_path = post_silence_io.path
+
+    command = %w[sox -n -c 2 -e signed-integer]
+    command += ['-r', @rate]
+    command += ['-b', @bits]
+
+    system(*(command + [pre_silence_path, 'trim', '0.0', @pre]))
+    system(*(command + [post_silence_path, 'trim', '0.0', @post]))
+
+    ARGV.each do |src|
+      src = Pathname.new(src)
+      dest = @output_dir + src.basename
+      warn "#{src} -> #{dest}"
+      system('sox', pre_silence_path, src.to_s, post_silence_path, dest.to_s)
+    end
+  end
+end

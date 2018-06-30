@@ -1,0 +1,9 @@
+#!/bin/sh
+
+volume=0.05
+
+if [ $# -ne 0 ]; then
+  volume=$1
+fi
+
+sudo osascript -e "set Volume $volume"
