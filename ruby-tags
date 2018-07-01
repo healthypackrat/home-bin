@@ -38,7 +38,7 @@ if @bundler
   output = `#{bundle_show_paths}`
 
   if $?.success?
-    dirs += output.split(/\n/)
+    dirs += output.split(/\n/).map {|path| Dir[File.join(path, '{ext,lib}')] }.flatten
   end
 end
 
