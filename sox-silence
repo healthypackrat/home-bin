@@ -14,7 +14,7 @@ require 'tempfile'
 
 parser = OptionParser.new
 
-parser.banner = "Usage: #{File.basename($0)} [options] FILES..."
+parser.banner = "Usage: #{parser.program_name} [options] FILES..."
 
 parser.on('-d', '--output-dir=DIR', "Output directory (default: #{@output_dir})") {|value| @output_dir = value }
 parser.on('-r', '--rate=RATE', "Sample rate (default: #{@rate})") {|value| @rate = value }

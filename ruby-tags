@@ -17,7 +17,7 @@ src_glob = File.expand_path("~/src/ruby/ruby-#{RUBY_VERSION}/**/*.[ch]")
 
 parser = OptionParser.new
 
-parser.banner = "Usage: #{File.basename($0)} [options] FILES..."
+parser.banner = "Usage: #{parser.program_name} [options] FILES..."
 
 parser.on('-b', '--bundler', "Include bundled gems from output of `#{bundle_show_paths}`") { @bundler = true }
 parser.on('-g', '--gems', 'Include all installed gems from Gem.path') { @gems = true }
