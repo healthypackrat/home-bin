@@ -1,6 +1,8 @@
 prefix = $(HOME)/bin
 
 sources = \
+  brew-installed-deps \
+  brew-installed-rdeps \
   http-server \
   java_home \
   ruby-tags \
