@@ -28,10 +28,6 @@ parser.on('-d', '--debug') { @debug = true }
 
 parser.parse!
 
-if [@bundler, @gems, @stdlib, @src].none?
-  @stdlib = true
-end
-
 dirs = []
 
 if @bundler
