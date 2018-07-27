@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+# convert Safari bookmarks to JSON
+
+require 'json'
+require 'tempfile'
+
+require 'plist'
+
+class Converter
+  def initialize(src_path)
+    @src_path = src_path
+  end
+
+  def to_json
+    JSON.pretty_generate(parse)
+  end
+
+  def parse(node=parse_plist)
+    case node.fetch('WebBookmarkType')
+    when 'WebBookmarkTypeList'
+      {
+        title: node.fetch('Title'),
+        children: node.fetch('Children', []).map {|c| parse(c) }.compact
+      }
+    when 'WebBookmarkTypeLeaf'
+      {
+        title: node.fetch('URIDictionary').fetch('title'),
+        url: node.fetch('URLString')
+      }
+    else
+      nil
+    end
+  end
+
+  private
+
+  def parse_plist
+    Plist.parse_xml(read_plist)
+  end
+
+  def read_plist
+    Tempfile.open(['Bookmarks', '.plist']) do |f|
+      unless system('plutil', '-convert', 'xml1', '-o', f.path, @src_path)
+        raise "plutil returned %d" % $?.exitstatus
+      end
+
+      f.read
+    end
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  converter = Converter.new(ARGV[0] || File.expand_path('~/Library/Safari/Bookmarks.plist'))
+  puts converter.to_json
+end

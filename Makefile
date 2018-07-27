@@ -1,6 +1,7 @@
 prefix = $(HOME)/bin
 
 sources = \
+  bookmarks2json \
   brew-installed-deps \
   brew-installed-rdeps \
   http-server \
@@ -11,6 +12,8 @@ sources = \
   terminal-notifier-alert
 
 targets = $(addprefix $(prefix)/,$(sources))
+
+.PHONY: all show-diff
 
 all: $(targets)
 
