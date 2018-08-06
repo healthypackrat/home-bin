@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+# Usage:
+#
+#   $ note -e Learning Ruby
+#   #=> open ~/Dropbox/Notes/Inbox/YYYY-MM-DD-Learning-Ruby.md in editor
+
+require 'optparse'
+require 'pathname'
+
+dir = Pathname.new(File.expand_path('~/Dropbox/Notes/Inbox'))
+dir.mkpath
+
+@edit = false
+
+ARGV.options do |parser|
+  parser.banner = "Usage: #{parser.program_name} [-e] [TITLE...]"
+  parser.on('-e', 'Open in editor') { @edit = true }
+  parser.parse!
+end
+
+today = Time.now.strftime('%Y-%m-%d')
+title = ARGV.empty? ? nil : ARGV.join('-')
+basename = [today, title].compact.join('-') + '.md'
+path = dir.join(basename).to_s
+
+if @edit
+  editor = ENV['EDITOR'] || 'vim'
+  system(editor, path)
+else
+  puts path
+end

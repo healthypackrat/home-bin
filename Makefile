@@ -6,6 +6,7 @@ sources = \
   brew-installed-rdeps \
   http-server \
   java_home \
+  note \
   ruby-tags \
   set-volume \
   sox-silence \
