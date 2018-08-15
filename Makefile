@@ -6,6 +6,7 @@ sources = \
   brew-installed-rdeps \
   http-server \
   java_home \
+  jj \
   note \
   ruby-tags \
   set-volume \
