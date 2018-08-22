@@ -51,6 +51,13 @@ class Converter
 end
 
 if $PROGRAM_NAME == __FILE__
-  converter = Converter.new(ARGV[0] || File.expand_path('~/Library/Safari/Bookmarks.plist'))
+  path = ARGV[0] || File.expand_path('~/Library/Safari/Bookmarks.plist')
+
+  unless File.exist?(path)
+    abort("#{path.inspect} doesn't exist")
+  end
+
+  converter = Converter.new(path)
+
   puts converter.to_json
 end
