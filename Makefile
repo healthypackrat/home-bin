@@ -10,7 +10,8 @@ sources = \
   ruby-tags \
   set-volume \
   sox-silence \
-  terminal-notifier-alert
+  terminal-notifier-alert \
+  youtube-dl-playlist
 
 targets = $(addprefix $(prefix)/,$(sources))
 
