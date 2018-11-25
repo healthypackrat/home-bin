@@ -10,6 +10,7 @@ sources = \
   ruby-tags \
   set-volume \
   sox-silence \
+  tac \
   terminal-notifier-alert \
   youtube-dl-playlist
 
