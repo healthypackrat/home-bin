@@ -1,0 +1,3 @@
+#!/bin/sh
+
+youtube-dl -f 'bestaudio[ext=m4a]' -o '%(playlist_index)s %(title)s.%(ext)s' "$@"

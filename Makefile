@@ -12,7 +12,8 @@ sources = \
   sox-silence \
   tac \
   terminal-notifier-alert \
-  youtube-dl-playlist
+  youtube-dl-playlist \
+  youtube-dl-playlist-audio
 
 targets = $(addprefix $(prefix)/,$(sources))
 
