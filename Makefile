@@ -12,6 +12,7 @@ sources = \
   sox-silence \
   tac \
   terminal-notifier-alert \
+  youtube-dl-audio \
   youtube-dl-playlist \
   youtube-dl-playlist-audio
 
