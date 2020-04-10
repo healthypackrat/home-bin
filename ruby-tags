@@ -11,7 +11,7 @@ require 'optparse'
 
 @debug = false
 
-bundle_show_paths = 'bundle show --paths'
+bundle_show_paths = 'bundle list --paths'
 
 src_glob = File.expand_path("~/src/ruby/ruby-#{RUBY_VERSION}/**/*.[ch]")
 
